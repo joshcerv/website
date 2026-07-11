@@ -41,12 +41,12 @@
     outline: none;
     user-select: none;
   }
-  #highscore-label {
+  #upper-label {
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
   }
-  #score-value {
+  #lower-value {
     text-align: right;
   }
   @font-face {
@@ -58,21 +58,21 @@
 <body>
 <div id="stage">
   <canvas id="c"></canvas>
-  <div id="highscore-label" class="pf-text">joshcerv.com</div>
-  <div id="score-value" class="pf-text">00</div>
+  <div id="upper-label" class="pf-text">HIGH SCORE</div>
+  <div id="lower-value" class="pf-text">00</div>
 </div>
 <script>
 const W = 224, H = 288;
 const stage = document.getElementById('stage');
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-const highscoreLabel = document.getElementById('highscore-label');
-const scoreValue = document.getElementById('score-value');
+const upperLabel = document.getElementById('upper-label');
+const lowerValue = document.getElementById('lower-value');
 
 // Logical (224x288) positions of the text, taken from the original art.
-const HS_TOP = 0;         // "HIGH SCORE" top
-const SCORE_TOP = 9;      // "00" top
-const SCORE_RIGHT = 88;   // distance from right edge of canvas to right edge of "00" (224 - 136)
+const UPPER_TOP = 0;         // upper text top
+const LOWER_TOP = 9;      // lower text top
+const LOWER_RIGHT = 88;   // distance from right edge of canvas to right edge of lower text (224 - 136)
 const BASE_FONT = 8;      // font-size at scale = 1
 const BASE_LINE = 7;      // line-height at scale = 1
 
@@ -92,13 +92,13 @@ function resize() {
   // stretching a pre-rendered box — keeps it crisp at any zoom level.
   const fontPx = Math.max(1, Math.round(BASE_FONT * scale));
   const linePx = Math.max(1, Math.round(BASE_LINE * scale));
-  [highscoreLabel, scoreValue].forEach(el => {
+  [upperLabel, lowerValue].forEach(el => {
     el.style.fontSize = fontPx + 'px';
     el.style.lineHeight = linePx + 'px';
   });
-  highscoreLabel.style.top = Math.round(HS_TOP * scale) + 'px';
-  scoreValue.style.top = Math.round(SCORE_TOP * scale) + 'px';
-  scoreValue.style.right = Math.round(SCORE_RIGHT * scale) + 'px';
+  upperLabel.style.top = Math.round(UPPER_TOP * scale) + 'px';
+  lowerValue.style.top = Math.round(LOWER_TOP * scale) + 'px';
+  lowerValue.style.right = Math.round(LOWER_RIGHT * scale) + 'px';
 }
 resize();
 window.addEventListener('resize', () => { resize(); draw(); });
@@ -125,8 +125,8 @@ function draw() {
     }
   }
   ctx.putImageData(img, 0, 0);
-  // Blank out the baked-in "HIGH SCORE" / "00" pixel text —
-  // it's replaced by the real, editable text overlays.
+  // Blank out the baked-in upper/lower pixel text —
+  // it's replaced by the real text overlays.
   ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, W, 16);
 }
