@@ -67,7 +67,7 @@
     resize: none;
     background: transparent;
     border: none !important;
-    padding: 2px 2px 0 2px; /* Top: 2px, Right: 2px, Bottom: 0, Left: 2px */
+    padding: 2px 2px 0 2px;
     padding-top: 2px;
     padding-bottom: 2px;
     line-height: 1.4 !important;
@@ -100,8 +100,8 @@
 <body>
 <div id="stage">
   <canvas id="c"></canvas>
-  <div id="upper-label" class="pf-text">joshcerv.com editor</div>
-  <div id="lower-value" class="pf-text"></div>
+  <div id="upper-label" class="pf-text">joshcerv.com</div>
+  <div id="lower-value" class="pf-text">editor</div>
   <textarea id="middle-text" class="pf-text">edit</textarea>
 </div>
 <script>
@@ -153,9 +153,6 @@ resize();
 window.addEventListener('resize', () => { resize(); draw(); updateScrollability(); });
 
 function updateScrollability() {
-  // Only allow scrolling once content genuinely exceeds the box.
-  // A tiny threshold avoids sub-pixel rounding making it "scrollable"
-  // by a hair when the text otherwise fits perfectly.
   const overflowing = middleText.scrollHeight > middleText.clientHeight + 1;
   middleText.style.overflowY = overflowing ? 'auto' : 'hidden';
   if (!overflowing) middleText.scrollTop = 0;
