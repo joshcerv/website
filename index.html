@@ -624,7 +624,7 @@ function renderGrid(){
 
 preloadTiles().then(renderGrid);
 
-// --- Visitor counter (CounterAPI.dev, public counter, no key needed) ---
+// --- Visitor counter (local, per-browser — no external requests, nothing to block) ---
 const VISITOR_ROW = 35;       // the "VISITORS" row on the index page
 const VISITOR_START_COL = 10; // first digit cell (right after "VISITORS ")
 const VISITOR_WIDTH = 18;     // how many cells are reserved for digits
@@ -640,50 +640,21 @@ function setVisitorCount(n){
   renderGrid();
 }
 
-(async function trackVisitor(){
-  const WORKSPACE = 'joshcerv';
-  const COUNTER = 'visitors';
+(function trackVisitor(){
+  const COUNT_KEY = 'jc_visitor_count';
   const SESSION_KEY = 'jc_session_counted';
-  const CACHE_KEY = 'jc_last_visitor_count';
 
-  // Show the last known count immediately (covers content blockers / offline / slow network)
-  const cached = localStorage.getItem(CACHE_KEY);
-  if (cached !== null){
-    const cachedNum = parseInt(cached, 10);
-    if (!isNaN(cachedNum)) setVisitorCount(cachedNum);
+  let count = parseInt(localStorage.getItem(COUNT_KEY), 10);
+  if (isNaN(count)) count = 0;
+
+  // Only bump the count once per session (new tab/visit), not on every refresh
+  if (!sessionStorage.getItem(SESSION_KEY)){
+    count += 1;
+    localStorage.setItem(COUNT_KEY, String(count));
+    sessionStorage.setItem(SESSION_KEY, '1');
   }
 
-  const isNewSession = !sessionStorage.getItem(SESSION_KEY);
-  const endpoint = isNewSession
-    ? `https://api.counterapi.dev/v2/${WORKSPACE}/${COUNTER}/up`
-    : `https://api.counterapi.dev/v2/${WORKSPACE}/${COUNTER}/`;
-
-  try {
-    const res = await fetch(endpoint);
-    console.log('[visitor counter] HTTP status:', res.status);
-    const json = await res.json();
-    console.log('[visitor counter] raw response:', json);
-
-    if (!res.ok){
-      console.warn('[visitor counter] request failed:', json);
-      return;
-    }
-
-    if (isNewSession) sessionStorage.setItem(SESSION_KEY, '1');
-
-    const data = json.data || json;
-    const count = data.up_count ?? data.value ?? data.count;
-    if (typeof count === 'number'){
-      console.log('[visitor counter] count resolved to:', count);
-      localStorage.setItem(CACHE_KEY, String(count));
-      setVisitorCount(count);
-    } else {
-      console.warn('[visitor counter] could not find a numeric count in response:', data);
-    }
-  } catch (err){
-    // Likely a content blocker or offline connection. The cached count above (if any) stays displayed.
-    console.warn('[visitor counter] fetch blocked or failed (probably a content blocker):', err);
-  }
+  setVisitorCount(count);
 })();
 </script>
 </body>
