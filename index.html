@@ -46,7 +46,6 @@
     <div id="links"></div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 <script>
 "use strict";
 
@@ -628,7 +627,7 @@ preloadTiles().then(renderGrid);
 // --- Visitor counter (CounterAPI.dev, public counter, no key needed) ---
 const VISITOR_ROW = 35;       // the "VISITORS" row on the index page
 const VISITOR_START_COL = 10; // first digit cell (right after "VISITORS ")
-const VISITOR_WIDTH = 12;     // how many cells are reserved for digits
+const VISITOR_WIDTH = 18;     // how many cells are reserved for digits
 
 function setVisitorCount(n){
   if (currentPage !== 'index') return;
@@ -642,24 +641,37 @@ function setVisitorCount(n){
 }
 
 (async function trackVisitor(){
-  if (typeof Counter === 'undefined') { console.warn('CounterAPI library failed to load'); return; }
-  const counter = new Counter({ workspace: 'joshcerv' });
+  const WORKSPACE = 'joshcerv';
+  const COUNTER = 'visitors';
   const SESSION_KEY = 'jc_session_counted';
+  const isNewSession = !sessionStorage.getItem(SESSION_KEY);
+  const endpoint = isNewSession
+    ? `https://api.counterapi.dev/v2/${WORKSPACE}/${COUNTER}/up`
+    : `https://api.counterapi.dev/v2/${WORKSPACE}/${COUNTER}/`;
+
   try {
-    let result;
-    if (!sessionStorage.getItem(SESSION_KEY)){
-      // New tab/session: bump the counter
-      result = await counter.up('visitors');
-      sessionStorage.setItem(SESSION_KEY, '1');
-    } else {
-      // Same session (e.g. a refresh): just read the current value, don't increment
-      result = await counter.get('visitors');
+    const res = await fetch(endpoint);
+    console.log('[visitor counter] HTTP status:', res.status);
+    const json = await res.json();
+    console.log('[visitor counter] raw response:', json);
+
+    if (!res.ok){
+      console.warn('[visitor counter] request failed:', json);
+      return;
     }
-    if (result && typeof result.value === 'number'){
-      setVisitorCount(result.value);
+
+    if (isNewSession) sessionStorage.setItem(SESSION_KEY, '1');
+
+    const data = json.data || json;
+    const count = data.up_count ?? data.value ?? data.count;
+    if (typeof count === 'number'){
+      console.log('[visitor counter] count resolved to:', count);
+      setVisitorCount(count);
+    } else {
+      console.warn('[visitor counter] could not find a numeric count in response:', data);
     }
   } catch (err){
-    console.warn('visitor counter unavailable:', err);
+    console.error('[visitor counter] fetch failed:', err);
   }
 })();
 </script>
