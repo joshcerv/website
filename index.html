@@ -46,6 +46,7 @@
     <div id="links"></div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 <script>
 "use strict";
 
@@ -95,12 +96,11 @@ const PAGES = {
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
-      "[ ][A][B][O][U][T][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][E][M][A][I][L][ ]",
+      "[ ][V][I][S][I][T][O][R][S][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][E][M][A][I][L][ ]",
     ],
     rowColor: { 0: "#ea3323", 18: "#75fbfd" },
     links: [
       { row: 18, startCol: 9, endCol: 18, to: "home"},
-      { row: 35, startCol: 1, endCol: 5, to: "about"},
       { row: 35, startCol: 22, endCol: 26, href: "mailto:emailme@joshcerv.com"},
     ],
   },
@@ -625,6 +625,44 @@ function renderGrid(){
 }
 
 preloadTiles().then(renderGrid);
+
+// --- Visitor counter (CounterAPI.dev, public counter, no key needed) ---
+const VISITOR_ROW = 35;       // the "VISITORS" row on the index page
+const VISITOR_START_COL = 10; // first digit cell (right after "VISITORS ")
+const VISITOR_WIDTH = 12;     // how many cells are reserved for digits
+
+function setVisitorCount(n){
+  if (currentPage !== 'index') return;
+  const row = GRID_CELLS[VISITOR_ROW];
+  if (!row) return;
+  const digits = String(n).split('');
+  for (let i = 0; i < VISITOR_WIDTH; i++){
+    row[VISITOR_START_COL + i] = i < digits.length ? digits[i] : ' ';
+  }
+  renderGrid();
+}
+
+(async function trackVisitor(){
+  if (typeof Counter === 'undefined') { console.warn('CounterAPI library failed to load'); return; }
+  const counter = new Counter({ workspace: 'joshcerv' });
+  const SESSION_KEY = 'jc_session_counted';
+  try {
+    let result;
+    if (!sessionStorage.getItem(SESSION_KEY)){
+      // New tab/session: bump the counter
+      result = await counter.up('visitors');
+      sessionStorage.setItem(SESSION_KEY, '1');
+    } else {
+      // Same session (e.g. a refresh): just read the current value, don't increment
+      result = await counter.get('visitors');
+    }
+    if (result && typeof result.value === 'number'){
+      setVisitorCount(result.value);
+    }
+  } catch (err){
+    console.warn('visitor counter unavailable:', err);
+  }
+})();
 </script>
 </body>
 </html>
