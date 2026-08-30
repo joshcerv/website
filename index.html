@@ -644,6 +644,15 @@ function setVisitorCount(n){
   const WORKSPACE = 'joshcerv';
   const COUNTER = 'visitors';
   const SESSION_KEY = 'jc_session_counted';
+  const CACHE_KEY = 'jc_last_visitor_count';
+
+  // Show the last known count immediately (covers content blockers / offline / slow network)
+  const cached = localStorage.getItem(CACHE_KEY);
+  if (cached !== null){
+    const cachedNum = parseInt(cached, 10);
+    if (!isNaN(cachedNum)) setVisitorCount(cachedNum);
+  }
+
   const isNewSession = !sessionStorage.getItem(SESSION_KEY);
   const endpoint = isNewSession
     ? `https://api.counterapi.dev/v2/${WORKSPACE}/${COUNTER}/up`
@@ -666,12 +675,14 @@ function setVisitorCount(n){
     const count = data.up_count ?? data.value ?? data.count;
     if (typeof count === 'number'){
       console.log('[visitor counter] count resolved to:', count);
+      localStorage.setItem(CACHE_KEY, String(count));
       setVisitorCount(count);
     } else {
       console.warn('[visitor counter] could not find a numeric count in response:', data);
     }
   } catch (err){
-    console.error('[visitor counter] fetch failed:', err);
+    // Likely a content blocker or offline connection. The cached count above (if any) stays displayed.
+    console.warn('[visitor counter] fetch blocked or failed (probably a content blocker):', err);
   }
 })();
 </script>
