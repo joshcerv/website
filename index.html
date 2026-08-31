@@ -95,7 +95,7 @@ const PAGES = {
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
-      "[ ][V][I][S][I][T][O][R][S][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
+      "[ ][V][I][S][I][T][O][R][S][ ][X][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
     ],
     rowColor: { 0: "#ea3323", 18: "#75fbfd" },
     links: [
@@ -114,10 +114,10 @@ const PAGES = {
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][U][P][D][A][T][E][S][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
+      "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][E][M][A][I][L][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
-      "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
-      "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
+      "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][A][B][O][U][T][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
@@ -141,10 +141,12 @@ const PAGES = {
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][B][A][C][K][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
     ],
-    rowColor: { 0: "#ea3323", 7: "#0000f5"},
+    rowColor: { 0: "#ea3323", 7: "#0000f5", 10: "#0000f5", 13: "#0000f5"},
     links: [
       { row: 35, startCol: 1, endCol: 4, to: "index"},
       { row: 7, startCol: 10, endCol: 16, to: "updates"},
+      { row: 10, startCol: 11, endCol: 15, to: "mailto:emailme@joshcerv.com"},
+      { row: 13, startCol: 11, endCol: 15, to: "about"},
     ],
   },
   about: {
@@ -623,39 +625,6 @@ function renderGrid(){
 }
 
 preloadTiles().then(renderGrid);
-
-// --- Visitor counter (local, per-browser — no external requests, nothing to block) ---
-const VISITOR_ROW = 35;       // the "VISITORS" row on the index page
-const VISITOR_START_COL = 10; // first digit cell (right after "VISITORS ")
-const VISITOR_WIDTH = 18;     // how many cells are reserved for digits
-
-function setVisitorCount(n){
-  if (currentPage !== 'index') return;
-  const row = GRID_CELLS[VISITOR_ROW];
-  if (!row) return;
-  const digits = String(n).split('');
-  for (let i = 0; i < VISITOR_WIDTH; i++){
-    row[VISITOR_START_COL + i] = i < digits.length ? digits[i] : ' ';
-  }
-  renderGrid();
-}
-
-(function trackVisitor(){
-  const COUNT_KEY = 'jc_visitor_count';
-  const SESSION_KEY = 'jc_session_counted';
-
-  let count = parseInt(localStorage.getItem(COUNT_KEY), 10);
-  if (isNaN(count)) count = 0;
-
-  // Only bump the count once per session (new tab/visit), not on every refresh
-  if (!sessionStorage.getItem(SESSION_KEY)){
-    count += 1;
-    localStorage.setItem(COUNT_KEY, String(count));
-    sessionStorage.setItem(SESSION_KEY, '1');
-  }
-
-  setVisitorCount(count);
-})();
 </script>
 </body>
 </html>
