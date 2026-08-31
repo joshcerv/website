@@ -626,12 +626,12 @@ function renderGrid(){
 }
 
 const VISITOR_WORKSPACE = "joshcerv";
-const VISITOR_COUNTER = "visitors";
+const VISITOR_COUNTER = "joshcervvisits";
 const VISITOR_ROW = 35; // the "VISITORS #####" row on the index page
 
 async function fetchVisitorCount(){
   try {
-    const res = await fetch(`https://api.counterapi.dev/v2/joshcerv/visitors/up`);
+    const res = await fetch(`https://api.counterapi.dev/v2/${VISITOR_WORKSPACE}/${VISITOR_COUNTER}/up`);
     if (!res.ok) throw new Error("HTTP " + res.status);
     const json = await res.json();
     const raw = json?.data?.up_count ?? json?.data?.value ?? json?.up_count ?? json?.value;
