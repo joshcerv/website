@@ -647,9 +647,7 @@ function setVisitorCount(n){
   const cells = parseRow(PAGES.index.grid[VISITOR_ROW]);
   const start = cells.indexOf('#');
   if (start === -1) return;
-  let hashCount = 0;
-  for (let i = start; i < cells.length && cells[i] === '#'; i++) hashCount++;
-  const digits = String(n).padStart(hashCount, '0');
+  const digits = String(n);
   for (let i = 0; i < digits.length && start + i < cells.length; i++){
     cells[start + i] = digits[i];
   }
