@@ -30,16 +30,16 @@
 
   #grid { position:absolute; left:0; top:0; image-rendering:pixelated; }
 
-  #links { position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; }
-  #links a { position:absolute; display:block; pointer-events:auto; cursor:pointer; background:transparent; }
-  #links a.debug { background:rgba(255,0,80,0.35); outline:1px solid rgba(255,0,80,0.8); }
-
   #notfound {
     display:none;
     position:fixed; left:0; top:0;
     image-rendering:pixelated;
     image-rendering:crisp-edges;
   }
+
+  #links { position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; }
+  #links a { position:absolute; display:block; pointer-events:auto; cursor:pointer; background:transparent; }
+  #links a.debug { background:rgba(255,0,80,0.35); outline:1px solid rgba(255,0,80,0.8); }
 </style>
 </head>
 <body>
@@ -103,13 +103,11 @@ const PAGES = {
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
-      "[ ][A][B][O][U][T][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][E][M][A][I][L][ ]",
+      "[ ][V][I][S][I][T][O][R][S][ ][#][#][#][#][#][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
     ],
     rowColor: { 0: "#ea3323", 18: "#75fbfd" },
     links: [
       { row: 18, startCol: 9, endCol: 18, to: "home"},
-      { row: 35, startCol: 1, endCol: 5, to: "about"},
-      { row: 35, startCol: 22, endCol: 26, href: "mailto:emailme@joshcerv.com"},
     ],
   },
   home: {
@@ -124,10 +122,10 @@ const PAGES = {
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][U][P][D][A][T][E][S][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
+      "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][E][M][A][I][L][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
-      "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
-      "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
+      "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][A][B][O][U][T][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
@@ -151,10 +149,12 @@ const PAGES = {
       "[ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
       "[ ][B][A][C][K][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ][ ]",
     ],
-    rowColor: { 0: "#ea3323", 7: "#0000f5"},
+    rowColor: { 0: "#ea3323", 7: "#0000f5", 10: "#0000f5", 13: "#0000f5"},
     links: [
       { row: 35, startCol: 1, endCol: 4, to: "index"},
       { row: 7, startCol: 10, endCol: 16, to: "updates"},
+      { row: 10, startCol: 11, endCol: 15, href: "mailto:emailme@joshcerv.com"},
+      { row: 13, startCol: 11, endCol: 15, to: "about"},
     ],
   },
   about: {
@@ -198,7 +198,7 @@ const PAGES = {
     ],
     rowColor: { 0: "#ea3323"},
     links: [
-      { row: 35, startCol: 1, endCol: 4, to: "index"},
+      { row: 35, startCol: 1, endCol: 4, to: "home"},
     ],
   },
   updates: {
@@ -288,17 +288,6 @@ const bgEl = document.getElementById('bg');
 const bgCtx = bgEl.getContext('2d');
 bgCtx.imageSmoothingEnabled = false;
 
-let SCALE = 1;
-
-let centerLeft = 0, centerTop = 0, tileW = 0, tileH = 0;
-
-let bgColsNeeded = 1, bgRowsNeeded = 1;
-
-let bgMode = 'none';
-
-let bgTilesAbove = 0;
-let gridReady = false;
-
 const stageEl = document.getElementById('stage');
 const notfoundEl = document.getElementById('notfound');
 const notfoundCtx = notfoundEl.getContext('2d');
@@ -317,6 +306,17 @@ function renderNotfound(){
     }
   }
 }
+
+let SCALE = 1;
+
+let centerLeft = 0, centerTop = 0, tileW = 0, tileH = 0;
+
+let bgColsNeeded = 1, bgRowsNeeded = 1;
+
+let bgMode = 'none';
+
+let bgTilesAbove = 0;
+let gridReady = false;
 
 function fit(){
 
@@ -337,9 +337,7 @@ function fit(){
   screenEl.style.top  = centerTop  + 'px';
   artEl.style.width   = tileW  + 'px';
   artEl.style.height  = tileH  + 'px';
-
-  // Background: cover the whole viewport with the scrolling starfield,
-  // tiled at the same pixel scale as the foreground.
+ 
   bgMode = 'cover';
   bgColsNeeded = Math.ceil(vw / (FW * SCALE)) + 1;
   bgRowsNeeded = Math.ceil(vh / (FH * SCALE)) + 1;
@@ -348,8 +346,7 @@ function fit(){
   bgEl.height = bgRowsNeeded * FH;
   bgEl.style.width  = (bgColsNeeded * FW * SCALE) + 'px';
   bgEl.style.height = (bgRowsNeeded * FH * SCALE) + 'px';
-
-  // Align tile grid to the centered screen so bg and art stay in phase.
+ 
   const bgLeft = centerLeft - Math.ceil(centerLeft / (FW * SCALE)) * (FW * SCALE);
   const bgTop  = centerTop  - Math.ceil(centerTop  / (FH * SCALE)) * (FH * SCALE);
   bgEl.style.left = bgLeft + 'px';
@@ -398,8 +395,6 @@ frameCtx.imageSmoothingEnabled = false;
 const SCROLL_PX_PER_FRAME = 1;
 let scrollY = 0;
 
-// Random horizontal placement, chosen once per page load.
-// Whole source pixels only, so the field stays pixel-perfect.
 const OFFSET_X = Math.floor(Math.random() * FW);
 
 const srcCanvas = document.createElement('canvas');
@@ -410,13 +405,9 @@ srcCtx.imageSmoothingEnabled = false;
 function draw(i){
   srcCtx.putImageData(frameImages[i], 0, 0);
 
-  // Scroll cycle is the clip's own height, so repeats butt edge-to-edge.
   const off = ((scrollY % FH) + FH) % FH;
   const offX = ((OFFSET_X % FW) + FW) % FW;
 
-  // Draw enough copies to cover the window, starting one clip above/left of
-  // the offset. Consecutive copies are different parts of the loop, so
-  // nothing is ever shown twice at once.
   ctx.clearRect(0, 0, CONTENT_W, CONTENT_H);
   for (let y = off - FH; y < CONTENT_H; y += FH){
     for (let x = offX - FW; x < CONTENT_W; x += FW){
@@ -424,8 +415,6 @@ function draw(i){
     }
   }
 
-  // Background tile is one full clip, wrapped at the same offsets so the
-  // tiled background stays in phase with the foreground.
   frameCtx.clearRect(0, 0, FW, FH);
   for (const dy of [off, off - FH]){
     for (const dx of [offX, offX - FW]){
@@ -444,7 +433,6 @@ function renderBg(){
     }
   }
 }
-
 
 function tick(now){
 
@@ -525,6 +513,7 @@ const tileImages = {};
 function preloadTiles(){
   const need = new Set();
   for (const id in PAGES) for (const row of cellsFor(id)) for (const ch of row) need.add(ch);
+  "0123456789".split('').forEach(d => need.add(d));
   let pending = 0;
   return new Promise(resolve => {
     if (need.size === 0){ resolve(); return; }
@@ -541,7 +530,6 @@ function preloadTiles(){
     if (pending === 0) resolve();
   });
 }
-
 
 const tintTile = document.createElement('canvas');
 tintTile.width = 8; tintTile.height = 8;
@@ -673,7 +661,41 @@ function renderGrid(){
   positionLinks();
 }
 
-preloadTiles().then(renderGrid);
+const VISITOR_COUNTER_URL = "https://counter.hidden-bird-98e6.workers.dev";
+const VISITOR_ROW = 35;
+
+async function fetchVisitorCount(){
+  try {
+    const res = await fetch(VISITOR_COUNTER_URL);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const json = await res.json();
+    const raw = json?.data?.up_count ?? json?.data?.value ?? json?.up_count ?? json?.value;
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : null;
+  } catch (err){
+    console.warn("visitor counter fetch failed:", err);
+    return null;
+  }
+}
+
+function setVisitorCount(n){
+  const cells = parseRow(PAGES.index.grid[VISITOR_ROW]);
+  const start = cells.indexOf('#');
+  if (start === -1) return;
+  const digits = String(n);
+  for (let i = 0; i < digits.length && start + i < cells.length; i++){
+    cells[start + i] = digits[i];
+  }
+  PAGES.index.grid[VISITOR_ROW] = '[' + cells.join('][') + ']';
+  if (currentPage === "index"){
+    GRID_CELLS = cellsFor("index");
+  }
+}
+
+Promise.all([preloadTiles(), fetchVisitorCount()]).then(([, count]) => {
+  if (count !== null) setVisitorCount(count);
+  renderGrid();
+});
 </script>
 </body>
 </html>
