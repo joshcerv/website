@@ -154,7 +154,7 @@ const PAGES = {
     links: [
       { row: 35, startCol: 1, endCol: 4, to: "index"},
       { row: 7, startCol: 10, endCol: 16, to: "updates"},
-      { row: 10, startCol: 11, endCol: 15, href: "mailto:emailme@joshcerv.com"},
+      { row: 10, startCol: 11, endCol: 15, mail: true },
       { row: 13, startCol: 11, endCol: 15, to: "about"},
     ],
   },
@@ -248,6 +248,11 @@ const PAGES = {
   },
 };
 const DEFAULT_PAGE = "index";
+
+const EMAIL_CODES = [101,109,97,105,108,109,101,64,106,111,115,104,99,101,114,118,46,99,111,109];
+function getEmail(){
+  return EMAIL_CODES.map(c => String.fromCharCode(c)).join('');
+}
 
 const SHOW_LINK_DEBUG = false;
 
@@ -577,6 +582,8 @@ function rebuildLinks(){
         e.preventDefault();
         goToPage(link.to);
       });
+    } else if (link.mail){
+      a.href = 'mailto:' + getEmail();
     } else {
       a.href = link.href;
       if (link.newTab) { a.target = '_blank'; a.rel = 'noopener'; }
