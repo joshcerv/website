@@ -310,9 +310,7 @@ function fit(){
   screenEl.style.top  = centerTop  + 'px';
   artEl.style.width   = tileW  + 'px';
   artEl.style.height  = tileH  + 'px';
-
-  // Background: cover the whole viewport with the scrolling starfield,
-  // tiled at the same pixel scale as the foreground.
+ 
   bgMode = 'cover';
   bgColsNeeded = Math.ceil(vw / (FW * SCALE)) + 1;
   bgRowsNeeded = Math.ceil(vh / (FH * SCALE)) + 1;
@@ -321,8 +319,7 @@ function fit(){
   bgEl.height = bgRowsNeeded * FH;
   bgEl.style.width  = (bgColsNeeded * FW * SCALE) + 'px';
   bgEl.style.height = (bgRowsNeeded * FH * SCALE) + 'px';
-
-  // Align tile grid to the centered screen so bg and art stay in phase.
+ 
   const bgLeft = centerLeft - Math.ceil(centerLeft / (FW * SCALE)) * (FW * SCALE);
   const bgTop  = centerTop  - Math.ceil(centerTop  / (FH * SCALE)) * (FH * SCALE);
   bgEl.style.left = bgLeft + 'px';
@@ -361,8 +358,6 @@ frameCtx.imageSmoothingEnabled = false;
 const SCROLL_PX_PER_FRAME = 1;
 let scrollY = 0;
 
-// Random horizontal placement, chosen once per page load.
-// Whole source pixels only, so the field stays pixel-perfect.
 const OFFSET_X = Math.floor(Math.random() * FW);
 
 const srcCanvas = document.createElement('canvas');
@@ -373,13 +368,9 @@ srcCtx.imageSmoothingEnabled = false;
 function draw(i){
   srcCtx.putImageData(frameImages[i], 0, 0);
 
-  // Scroll cycle is the clip's own height, so repeats butt edge-to-edge.
   const off = ((scrollY % FH) + FH) % FH;
   const offX = ((OFFSET_X % FW) + FW) % FW;
 
-  // Draw enough copies to cover the window, starting one clip above/left of
-  // the offset. Consecutive copies are different parts of the loop, so
-  // nothing is ever shown twice at once.
   ctx.clearRect(0, 0, CONTENT_W, CONTENT_H);
   for (let y = off - FH; y < CONTENT_H; y += FH){
     for (let x = offX - FW; x < CONTENT_W; x += FW){
@@ -387,8 +378,6 @@ function draw(i){
     }
   }
 
-  // Background tile is one full clip, wrapped at the same offsets so the
-  // tiled background stays in phase with the foreground.
   frameCtx.clearRect(0, 0, FW, FH);
   for (const dy of [off, off - FH]){
     for (const dx of [offX, offX - FW]){
@@ -407,7 +396,6 @@ function renderBg(){
     }
   }
 }
-
 
 function tick(now){
 
@@ -504,7 +492,6 @@ function preloadTiles(){
     if (pending === 0) resolve();
   });
 }
-
 
 const tintTile = document.createElement('canvas');
 tintTile.width = 8; tintTile.height = 8;
@@ -626,7 +613,7 @@ function renderGrid(){
 }
 
 const VISITOR_COUNTER_URL = "https://counter.hidden-bird-98e6.workers.dev";
-const VISITOR_ROW = 35; // the "VISITORS #####" row on the index page
+const VISITOR_ROW = 35;
 
 async function fetchVisitorCount(){
   try {
